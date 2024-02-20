@@ -9,12 +9,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/bdad64c26f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../css/style.css">
+    <title>KURADUSENGE | Blog</title>
 </head>
 
 <body id="KURADUSENGE">
-    <nav class="sticky-nav flex justify-between items-center ">
+    <nav class="sticky-nav flex justify-between items-center large">
         <ul class="">
-            <li class="text-lg underline-move"><a href="#KURADUSENGE">KURADUSENGE</a></li>
+            <li class="text-lg underline-move"><a href="../../index.html">KURADUSENGE</a></li>
         </ul>
         <ul class="flex gap-4">
             <li class="text-sm underline-move"><a href="../../index.html#skills">Skills </a></li>
@@ -22,48 +23,148 @@
             <li class="text-sm underline-move"><a href="../../index.html#Work">Work</a></li>
             <li class="text-sm underline-move"><a href="./jobs.html">Jobs</a></li>
             <li class="text-sm underline-move"><a href="../../index.html#Contact">Contact</a></li>
-            <li class="text-sm underline-move"><a href="#">Blog</a></li>
+            <li class="text-sm underline-move"><a href="./blogs.html">Blog</a></li>
         </ul>
         <ul>
             <li class="text-sm underline-move"><a href="./login.html">Login</a></li>
         </ul>
+    </nav>
+    <nav class="middle sticky-nav">
+
+        <ul class=" flex justify-between pad-y">
+            <li class="text-sm underline-move "><a href="../../index.html#KURADUSENGE">KURADUSENGE</a></li>
+            <button id="navButton">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+        </ul>
+        <nav class=" flex justify-between items-center  flex-wrap " id="navItems">
+            <ul class="flex gap-4">
+                <li class="text-xs underline-move"><a href="../../index.html#skills">Skills </a></li>
+                <li class="text-xs underline-move"><a href="../../index.html#About">About</a></li>
+                <li class="text-xs underline-move"><a href="../../index.html#Work">Work</a></li>
+                <li class="text-xs underline-move"><a href="./jobs.html">Jobs</a></li>
+                <li class="text-xs underline-move"><a href="../../index.html#Contact">Contact</a></li>
+                <li class="text-xs underline-move"><a href="./blogs.html">Blog</a></li>
+            </ul>
+            <ul>
+                <li class="text-xs underline-move"><a href="./login.html">Login</a></li>
+
+            </ul>
+
+
+        </nav>
 
     </nav>
- 
-    <div id="skills" class="flex flex-col items-end hello-section ">
-        <h1 class="text-xl text-end"> Blogs</h1>
-       
-     
-        <div id="About" class="flex flex-col items-center hello-section ">
-            <div class="flex flex-col gap-8 bg-white w-100 pad rounded">
-                <h1 class="text-xl"> Blogs</h1>
-                <p class="">
+    <div class="flex flex-col ">
 
-                    I am fullstack software engineer and information technology enthusiast with deep interest in
-                    frontend
-                    development, My knowledge and experience doesn't have limit, I am also lifelong learner with power
-                    adaptability in every environment and to new technologies,
-                    With me makes me uniquee in Team, With hand on experience and knowledge at work, I work resiliently
-                    to
-                    deliver on time and develop satification on clients and devTeams
-                </p>
-                <h2>Talks About</h2>
-                <div class=" flex justify-between">
-                    <span class="underline-move">#Praying</span>
-                    <span class="underline-move">#Coding</span>
-                    <span class="underline-move">#Javascript</span>
-                    <span class="underline-move">#ReactJS</span>
-                    <span class="underline-move">#NextJs</span>
-                    <span class="underline-move">#Music</span>
-                    <span class="underline-move">#Playing Games</span>
+
+        <h1 class="text-xl text-end pad  w-fill"> Blogs</h1>
+        <div id="About" class="flex flex-col gap-8  pad-y    justify-center items-center w-screen">
+            <div class="flex   flex-col bg-white w-grid rounded">
+                <h1 class="text-lg text-end pad  "> Good Blogger</h1>
+                <div class="gap-8  rounded  w-full pad flex items-center flex-row">
+
+                    <img src="../img/pexels-pixabay.jpg" alt="" class="blog_image">
+
+
+                    <p>
+                        fullstack software engineer and information technology enthusiast with deep interest in frontend
+                        development, and backend development in other to create applications that are capable of solving
+                        real world problems using softwares I code as hobbie and proffesion as it was thing I liked to
+                        do since I was young.
+                    </p>
+
+                </div>
+                <div class="flex justify-between pad ">
+                    <span class=" flex gap-8">
+                        <div class="relative">
+                            <i class="fa-regular fa-envelope text-sm " id="openModalBtn"></i>
+
+                            <!-- <div id="myModal" class="modal"> -->
+                            <div class="modal-content flex flex-col justify-between gap-8 hidden" id="myModal">
+                                <div class="">
+
+                                    <div class="flex  justify-between">
+                                        <h4>Comments</h4>
+                                        <span class="close">&times;</span>
+                                    </div>
+                                    <div class="flex items-center gap-8 ">
+                                        <img src="../img/profile-pic.jpg" alt="" class="profile-pic">
+                                        <small class="text-xs">Well that was nice exploring</small>
+                                        <small class="text-xs">10:14 PM</small>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between gap-2">
+                                    <input class="comments" name="comments" placeholder="Write comment ......" />
+                                    <button type="submit" class="text-sm w-fit"><i class="fa-solid fa-plus"
+                                            style="color: #c0c0c0;"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-thumbs-up text-sm"></i>
+                    </span>
+                    <span>
+                        uploaded on 20 Dec 2024
+                    </span>
                 </div>
             </div>
+            <div class="flex   flex-col bg-white w-grid rounded">
+                <h1 class="text-lg text-end pad  "> Good Blogger</h1>
+                <div class="gap-8  rounded  w-full pad flex items-center flex-row">
+
+                    <img src="../img/pexels-pixabay.jpg" alt="" class="blog_image">
+
+
+                    <p>
+                        fullstack software engineer and information technology enthusiast with deep interest in frontend
+                        development, and backend development in other to create applications that are capable of solving
+                        real world problems using softwares I code as hobbie and proffesion as it was thing I liked to
+                        do since I was young.
+                    </p>
+
+                </div>
+                <div class="flex justify-between pad ">
+                    <span class=" flex gap-8">
+                        <div class="relative">
+                            <i class="fa-regular fa-envelope text-sm " id="openModalBtn"></i>
+
+                            <!-- <div id="myModal" class="modal"> -->
+                            <div class="modal-content flex flex-col justify-between gap-8 hidden" id="myModal">
+                                <div class="">
+
+                                    <div class="flex  justify-between">
+                                        <h4>Comments</h4>
+                                        <span class="close">&times;</span>
+                                    </div>
+                                    <div class="flex items-center gap-8 ">
+                                        <img src="../img/profile-pic.jpg" alt="" class="profile-pic">
+                                        <small class="text-xs">Well that was nice exploring</small>
+                                        <small class="text-xs">10:14 PM</small>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between gap-2">
+                                    <input class="comments" name="comments" placeholder="Write comment ......" />
+                                    <button type="submit" class="text-sm w-fit"><i class="fa-solid fa-plus"
+                                            style="color: #c0c0c0;"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-thumbs-up text-sm"></i>
+                    </span>
+                    <span>
+                        uploaded on 20 Dec 2024
+                    </span>
+                </div>
+            </div>
+
+
         </div>
-    
+
+
     </div>
-
-
-
+    </div>
+    <script src="../js/script.js">
+    </script>
 
 </body>
 

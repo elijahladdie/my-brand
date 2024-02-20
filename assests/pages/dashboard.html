@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/bdad64c26f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <title>KURADUSENGE | Blog</title>
+</head>
+
+<body id="KURADUSENGE">
+    <nav class="sticky-nav flex justify-between items-center ">
+        <ul class="">
+            <li class="text-lg underline-move">KURADUSENGE</li>
+        </ul>
+
+        <ul>
+            <li class="text-sm underline-move"><a href="../../index.html">Logout</a></li>
+        </ul>
+    </nav>
+    <div class="flex flex-col ">
+        <h1 class="text-xl text-end pad  w-fill"> Admin</h1>
+        <div id="About" class="flex flex-col gap-8  pad-y    justify-center items-center w-screen">
+            <div class=" flex  gap-8  flex-col bg-white pad w-100 rounded form-fit">
+                <div class="form-group">
+                    <input type="Blog_title" id="blogTitle" 
+                    
+                     placeholder="Blog title.................." required>
+                </div>
+                <div class="form-group">
+                    <input type="file" id="file" name="file" required>
+                </div>
+                <div class="form-group">
+                    <textarea id="blogBody" name="body" placeholder="Blog Body.................." required></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="button" onclick="addBlog()">Submit</button>
+                </div>
+            </div>
+
+        </div>
+
+        <table id="blogTable" class="w-100">
+            <thead>
+              <tr>
+                <th>Blog Title</th>
+                <th>Image</th>
+                <th>Blog Body</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+    </div>
+
+    <script src="../js/script.js">
+    </script>
+
+</body>
+
+</html>
