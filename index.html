@@ -9,10 +9,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/bdad64c26f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./assests/css/style.css">
+    <title>KURADUSENGE |  Home</title>
+
 </head>
-<!-- <i class="fas fa-bars"></i> -->
+
 <body id="KURADUSENGE">
-    <nav class="sticky-nav flex justify-between items-center ">
+    <nav class="sticky-nav flex justify-between items-center large">
         <ul class="">
             <li class="text-lg underline-move"><a href="#KURADUSENGE">KURADUSENGE</a></li>
         </ul>
@@ -27,11 +29,37 @@
         <ul>
             <li class="text-sm underline-move"><a href="./assests/pages/login.html">Login</a></li>
         </ul>
+    </nav>
+    <nav class="middle sticky-nav">
+
+        <ul class=" flex justify-between pad-y">
+            <li class="text-sm underline-move "><a href="#KURADUSENGE">KURADUSENGE</a></li>
+            <button id="navButton">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+        </ul>
+        <nav class=" flex justify-between items-center  flex-wrap " id="navItems">
+            <ul class="flex gap-4">
+                <li class="text-xs underline-move"><a href="#skills">Skills </a></li>
+                <li class="text-xs underline-move"><a href="#About">About</a></li>
+                <li class="text-xs underline-move"><a href="#Work">Work</a></li>
+                <li class="text-xs underline-move"><a href="./assests/pages/jobs.html">Jobs</a></li>
+                <li class="text-xs underline-move"><a href="#Contact">Contact</a></li>
+                <li class="text-xs underline-move"><a href="./assests/pages/blogs.html">Blog</a></li>
+            </ul>
+            <ul>
+                <li class="text-xs underline-move"><a href="./assests/pages/login.html">Login</a></li>
+
+            </ul>
+
+
+        </nav>
 
     </nav>
+
     <div class="flex flex-col items-center hello-section ">
         <div class="flex items-center gap-8">
-            <img src="./assests/img/laddie-profile.jpg" alt="" class="w-96 h-96">
+            <img src="./assests/img/laddie-profile.jpg" alt="" class="w-96  laddie-profile">
             <div class="flex flex-col">
                 <h1 class="text-xl">Elie</h1>
 
@@ -40,16 +68,16 @@
         </div>
         <div class=" flex justify-end items-center gap-8 ">
             <div class="flex flex-col ">
-                <h1>Software developer</h1>
-                <span class="flex gap-2 items-center"><i class="fas fa-location"></i>Kigali - Rwanda</span>
+                <h1 class="text-xl">Software developer</h1>
+                <span class="flex gap-2 items-center text-sm"><i class="fas fa-location"></i>Kigali - Rwanda</span>
             </div>
-            <img src="./assests/img/do-what-is-great.jpg" alt="" class="w-96 h-96">
+            <img src="./assests/img/do-what-is-great.jpg" alt="" class="w-96 h-96 laddie-profile">
         </div>
     </div>
     <div id="skills" class="flex flex-col items-center hello-section ">
         <h1 class="text-xl"> Skills</h1>
-        <div class="flex flex-col gap-8">
-            <div class="flex flex-row gap-8">
+        <div class="flex flex-col gap-8 ">
+            <div class="flex flex-row gap-8 skills">
 
                 <div class="flex items-center gap-8 bg-white pad rounded">
                     <div class="flex flex-col ">
@@ -91,7 +119,7 @@
                     </div>
                 </div>
             </div>
-            <div class="flex flex-row gap-8">
+            <div class="flex flex-row gap-8 skills">
                 <div class="flex items-center gap-8 bg-white pad rounded">
                     <div class="flex flex-col ">
 
@@ -130,7 +158,7 @@
             </div>
         </div>
         <div id="About" class="flex flex-col items-center hello-section ">
-            <div class="flex flex-col gap-8 bg-white w-100 pad rounded">
+            <div class="flex flex-col gap-8 bg-white w-100 pad rounded ">
                 <h1 class="text-xl"> About</h1>
                 <p class="">
 
@@ -143,10 +171,11 @@
                     deliver on time and develop satification on clients and devTeams
                 </p>
                 <h2>Talks About</h2>
-                <div class=" flex justify-between">
+                <div class=" flex justify-between gap-2">
                     <span class="underline-move">#Praying</span>
                     <span class="underline-move">#Coding</span>
                     <span class="underline-move">#Javascript</span>
+
                     <span class="underline-move">#ReactJS</span>
                     <span class="underline-move">#NextJs</span>
                     <span class="underline-move">#Music</span>
@@ -154,11 +183,11 @@
                 </div>
             </div>
         </div>
-        <div id="Work" class="flex flex-col items-center hello-section ">
+        <div id="Work" class="flex flex-col items-center hello-section justify-center w-full ">
             <h1 class="text-xl"> Projects</h1>
-            <div class="flex flex-col gap">
+            <div class="flex flex-col gap items-center">
 
-                <div class=" flex justify-end  gap-8 pad">
+                <div class=" flex justify-end  gap-8 pad flex-wrap">
                     <img src="./assests/img/threed.jpg" alt="" class="w-min h-min">
                     <div class="flex flex-col ">
                         <h1>Text To 3D</h1>
@@ -188,7 +217,7 @@
                         </span>
                     </div>
                 </div>
-                <div class=" flex justify-end  gap-8 pad">
+                <div class=" flex justify-end  gap-8 pad flex-wrap">
                     <img src="./assests/img/insightul-ink.jpg" alt="" class="w-min h-min">
                     <div class="flex flex-col ">
                         <h1>Insightfulink</h1>
@@ -224,7 +253,7 @@
         </div>
         <div id="Contact" class="flex flex-col items-center hello-section justify-center    ">
             <h1 class="text-xl"> Contact</h1>
-            <div class="flex flex-row gap justify-between items-center gap-8 w-fill">
+            <div class="flex flex-row gap justify-between items-center gap-8 w-fill contact">
                 <div class="">
                     <img src="./assests/img/Contact.jpg" alt="" class=" h-fit rounded">
                 </div>
@@ -263,7 +292,7 @@
                     </span>
                     <span class="flex gap-2 i flex-row gap-3 pad-x items-center text-xs underline-move pad-y">
                         <i class="fas fa-phone-alt"></i> <!-- Call icon -->
-      
+
                         <a target="_blank" href="https://instagram.com/elijah_laddie">+250792568899</a>
                     </span>
                     <span class="flex gap-2 i flex-row gap-3 pad-x items-center text-xs underline-move pad-y">
@@ -279,8 +308,7 @@
                         <a target="_blank" href="https://stackoverflow.com/users/1234567/elijahladdie">elijahladdie</a>
                     </span>
                 </div>
-                
-                
+
             </div>
 
         </div>
@@ -290,5 +318,6 @@
 
 
 </body>
+<script src="./assests/js/script.js"></script>
 
 </html>

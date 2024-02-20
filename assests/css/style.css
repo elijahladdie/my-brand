@@ -34,27 +34,44 @@ body {
     align-items: center;
 }
 
-
+button {
+    background: transparent;
+    border: none;
+    padding: 2px 14px;
+}
 
 .flex.gap-2 {
-    gap: 3px;
+    gap: 8px;
+}
+
+.flex.gap-1 {
+    gap: 4px;
 }
 
 .flex.gap-8 {
-    gap: 18px;
+    gap: 28px;
 }
 
 ul {
     list-style: none;
     gap: 16px;
 }
-.text-end{
+
+.text-end {
     text-align: end;
 }
 
+.middle {
+    display: none;
+}
+
 nav {
-    padding: 10px 20px;
+    padding: 10px 10px;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.301);
+}
+
+nav.large {
+    padding: 0 30px;
 }
 
 .text-lg {
@@ -71,6 +88,7 @@ nav {
     font-size: 24px;
     font-weight: 400;
 }
+
 .text-xs {
     font-size: 16px;
     font-weight: 200;
@@ -111,23 +129,60 @@ a {
 }
 
 .h-fit {
+    min-height: 28rem;
+}
+
+img.h-fit {
     height: 28rem;
 }
+
 .h-fit {
     width: 20rem;
 }
-
-.w-fill{
+.form-fit{
+    height: fit-content!important;
+    width: fit-content!important;
+}
+.w-fill {
     width: 100%;
 }
+
 .sticky-nav {
     position: sticky;
     top: 0;
     z-index: 1000;
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #D9D9D9;
+    box-shadow: 0 0px 2px #0000001a;
+}
+table thead tr th{
+    border-bottom-style: groove;
+    border-bottom: 1px solid black!important;
 }
 
+
+table thead th{
+    text-align: start ;
+}
+table tbody tr td {
+
+
+}
+.bg-red{
+    background: #FF0000;
+    padding: 5px 10px;
+}
+.bg-primary{
+    background: #00C2FF;
+    padding: 5px 10px;
+}
+table tbody img{
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+}
+table{
+    margin-top: 20px!important;
+}
 .w-96 {
     width: 25rem;
 }
@@ -145,7 +200,12 @@ a {
 }
 
 .w-100 {
-    width: 60rem;
+    min-width: 40%;
+    margin: 0 25%;
+}
+
+.hidden {
+    display: none;
 }
 
 .flex.flex-col {
@@ -157,8 +217,9 @@ a {
 }
 
 .hello-section {
-    height: 94vh;
-    padding: 20px 20px;
+    min-height: 44vh;
+    padding: 20px 10px;
+    margin: 0 10px;
 }
 
 .bg-white {
@@ -166,14 +227,15 @@ a {
 }
 
 .pad {
-    padding: 34px;
+    padding: 24px 34px;
 }
 
 .pad-x {
-    padding: 10px;
+    padding: 0 10px;
 }
+
 .pad-y {
-    padding: 10px;
+    padding: 10px 0;
 }
 
 .rounded {
@@ -192,6 +254,103 @@ a {
     text-align: left;
 }
 
+.whitespace-nowrap {
+    white-space: nowrap;
+}
+
+.blog_image {
+    width: 20rem;
+    height: 13rem;
+}
+
+.w-grid {
+    min-width: 45rem;
+    max-width: 50rem;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+
+}
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    /* position: fixed; */
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal button {
+
+    padding: 8px 20px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    /* margin: 15% auto; */
+    padding: 20px;
+    /* border: 1px solid #888; */
+    box-shadow: 0px 0px 2px #888;
+    border-radius: 8px;
+    width: 40vh;
+    overflow-y: scroll;
+    height: 30vh;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+i:hover{
+    color: #aaa;
+}
+
+.comments {
+    padding: 8px !important;
+    background-color: #aaa;
+    outline: none;
+    border: none;
+    width: 100%;
+    border-radius: 9px;
+}
+small.text-xs {
+    font-size: 10px;
+    white-space: nowrap;
+    padding: 0 3px;
+}
+
+/* Close Button */
+.close {
+    color: #aaa;
+    /* float: right; */
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.profile-pic {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    filter: blur(1px);
+    filter: invert(4px);
+}
+
 /**Form */
 
 .form-group {
@@ -201,6 +360,10 @@ a {
 .form-group label {
     display: block;
     margin-bottom: 5px;
+}
+
+.flex.flex-wrap {
+    flex-wrap: wrap;
 }
 
 .form-group input,
@@ -215,9 +378,11 @@ a {
 .form-group textarea {
     height: 150px;
 }
-.bg-gray{
+
+.bg-gray {
     background-color: #b4b4b4b4;
 }
+
 .form-group button {
     padding: 10px 20px;
     background-color: #D9D9D9;
@@ -230,4 +395,126 @@ a {
 .form-group button:hover {
     background-color: #000000;
     color: white;
+}
+
+/* Jobs section */
+
+
+.w-screen {
+    width: 100vw !important;
+    padding: 5px 10px;
+}
+
+.w-fit {
+    width: fit-content !important;
+}
+
+
+@media (max-width:900px) {
+    .flex.contact {
+        flex-direction: column;
+    }
+
+    .flex.skills {
+        flex-wrap: wrap;
+        align-items: center;
+    }
+}
+
+@media (max-width:850px) {
+
+    .middle {
+        display: block;
+    }
+
+    .large {
+        display: none;
+    }
+
+    .flex.skills {
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .flex.skills:nth-child(2) {
+        flex-wrap: wrap-reverse;
+    }
+
+    .flex.contact {
+        flex-direction: column-reverse;
+    }
+
+    .flex.flex-row {
+        flex-direction: column;
+    }
+
+    .flex.flex-row {
+        flex-direction: column;
+    }
+
+    .w-100 {
+        min-width: 80%;
+        margin: 0;
+    }
+
+    .text-xl {
+        font-size: 34px;
+    }
+
+    .text-lg {
+        font-size: 25px;
+    }
+
+    .flex.justify-between.gap-2 {
+        flex-wrap: wrap;
+        min-width: 39vh;
+
+    }
+
+    .laddie-profile {
+        width: 15rem;
+        height: 15rem;
+    }
+
+    .laddie-profile.h-96 {
+        width: 15rem;
+        height: 10rem;
+    }
+}
+
+@media (max-width:540px) {
+
+    .text-xs {
+        font-size: 11px;
+        font-weight: 200;
+    }
+
+    .text-xl {
+        font-size: 18px;
+    }
+
+    .text-lg {
+        font-size: 15px;
+    }
+
+    .text-sm {
+        font-size: 13px;
+    }
+
+    .w-fit {
+        width: 100vw;
+    }
+
+    .w-screen#About {
+        flex-direction: column;
+    }
+
+    .flex.justify-between.gap-8 {
+        /* flex-direction: column; */
+        flex-wrap: wrap;
+    }
+
+    .flex.gap-8 {
+        font-size: 12px;
+    }
 }

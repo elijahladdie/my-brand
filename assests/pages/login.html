@@ -9,33 +9,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/bdad64c26f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../css/style.css">
+    <title>KURADUSENGE |  Login</title>
+
 </head>
 
 <body id="KURADUSENGE">
-    <nav class="sticky-nav flex justify-between items-center ">
+    <nav class="sticky-nav flex justify-between items-center large">
         <ul class="">
-            <li class="text-lg underline-move"><a href="#KURADUSENGE">KURADUSENGE</a></li>
+            <li class="text-lg underline-move"><a href="../../index.html">KURADUSENGE</a></li>
         </ul>
         <ul class="flex gap-4">
             <li class="text-sm underline-move"><a href="../../index.html#skills">Skills </a></li>
             <li class="text-sm underline-move"><a href="../../index.html#About">About</a></li>
             <li class="text-sm underline-move"><a href="../../index.html#Work">Work</a></li>
-            <li class="text-sm underline-move"><a href="#">Jobs</a></li>
+            <li class="text-sm underline-move"><a href="./jobs.html">Jobs</a></li>
             <li class="text-sm underline-move"><a href="../../index.html#Contact">Contact</a></li>
             <li class="text-sm underline-move"><a href="./blogs.html">Blog</a></li>
         </ul>
         <ul>
-            <li class="text-sm underline-move"><a href="#">Login</a></li>
+            <li class="text-sm underline-move"><a href="./login.html">Login</a></li>
         </ul>
+    </nav>
+    <nav class="middle sticky-nav">
+
+        <ul class=" flex justify-between pad-y">
+            <li class="text-sm underline-move "><a href="../../index.html#KURADUSENGE">KURADUSENGE</a></li>
+            <button id="navButton">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+        </ul>
+        <nav class=" flex justify-between items-center  flex-wrap " id="navItems">
+            <ul class="flex gap-4">
+                <li class="text-xs underline-move"><a href="../../index.html#skills">Skills </a></li>
+                <li class="text-xs underline-move"><a href="../../index.html#About">About</a></li>
+                <li class="text-xs underline-move"><a href="../../index.html#Work">Work</a></li>
+                <li class="text-xs underline-move"><a href="./jobs.html">Jobs</a></li>
+                <li class="text-xs underline-move"><a href="../../index.html#Contact">Contact</a></li>
+                <li class="text-xs underline-move"><a href="./blogs.html">Blog</a></li>
+            </ul>
+            <ul>
+                <li class="text-xs underline-move"><a href="./login.html">Login</a></li>
+            </ul>
+        </nav>
 
     </nav>
 
-    <div id="skills" class="flex flex-col items-center hello-section justify-center">
+    <div id="skills" class="flex flex-col items-center hello-section justify-center ">
         <h1 class="text-xl text-end"> Login 
         </h1>
 
 
-        <div class=" flex  gap-8  flex-col bg-white pad w-96 rounded ">
+        <div class=" flex  gap-8  flex-col bg-white pad w-96 rounded  ">
             <form class="h-">
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -46,7 +70,7 @@
                     <input type="password" id="password" name="password" placeholder="Password" required>
                 </div>
                 <div class="form-group">
-                    <button type="submit">Submit</button>
+                    <button type="button">Login</button>
                 </div>
             </form>
         </div>
@@ -56,5 +80,6 @@
 
 
 </body>
+<script src="../js/script.js"></script>
 
 </html>
