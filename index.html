@@ -259,18 +259,21 @@
                 </div>
 
                 <div class=" flex  gap-8  flex-col bg-white pad w-96 rounded ">
-                    <form class="h-fit">
+                    <form class="h-fit" id="contactForm">
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required>
+                            <input type="email" id="email" name="email" >
+                            <label id="email-error" class="error-message"></label>
                         </div>
                         <div class="form-group">
                             <label for="subject">Subject</label>
-                            <input type="text" id="subject" name="subject" required>
+                            <input type="text" id="subject" name="subject" >
+                            <label id="subject-error" class="error-message"></label>
                         </div>
                         <div class="form-group">
                             <label for="body">Body</label>
-                            <textarea id="body" name="body" required></textarea>
+                            <textarea id="body" name="body"  minlength="0"></textarea>
+                            <label id="body-error" class="error-message"></label>
                         </div>
                         <div class="form-group">
                             <button type="submit">Submit</button>
