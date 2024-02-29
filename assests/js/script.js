@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // If all validations pass, you can submit the form or redirect to dashboard
       // For now, let's just log the success message
-      window.location.href = "http://127.0.0.1:5500/assests/pages/dashboard.html"
+      window.location.href = "./dashboard.html"
     });
 
     function validateEmail(email) {
