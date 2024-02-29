@@ -15,7 +15,7 @@ body {
 }
 .error-message {
     color: red;
-    font-size: 8px;
+    font-size: 12px;
   }
 
 .flex {
@@ -171,10 +171,15 @@ table thead th{
 .bg-red{
     background: #FF0000;
     padding: 5px 10px;
+    color: white;
+    border-radius: 5px;
 }
 .bg-primary{
-    background: #00C2FF;
+    background: #37d0ff;
     padding: 5px 10px;
+    color: white;
+    border-radius: 5px;
+
 }
 table tbody img{
     width: 4rem;
@@ -527,7 +532,6 @@ small.text-xs {
     }
 
     .flex.justify-between.gap-8 {
-        /* flex-direction: column; */
         flex-wrap: wrap;
     }
 
