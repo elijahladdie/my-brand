@@ -29,61 +29,7 @@ if (modal && btn && span) {
   }
 }
 
-// Add Blog
-
-// function addBlog() {
-//   let title = document.getElementById("blogTitle").value;
-//   let fileInput = document.getElementById("file");
-//   let file = fileInput ? fileInput.files[0] : null;
-//   let body = document.getElementById("blogBody").value;
-
-//   if (!title || !body) {
-//     console.log('Incomplete blog details.');
-//     return;
-//   }
-
-//   let reader = new FileReader();
-//   reader.onload = function (event) {
-//     let imageUrl = event.target.result;
-
-//     let blog = {
-//       title: title,
-//       fileSrc: imageUrl,
-//       body: body
-//     };
-
-//     let blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-
-//     // Check if the blog with the same title already exists
-//     let existingBlogIndex = -1;
-//     for (let i = 0; i < blogs.length; i++) {
-//       if (blogs[i].title === title) {
-//         existingBlogIndex = i;
-//         break;
-//       }
-//     }
-
-//     if (existingBlogIndex !== -1) {
-//       // Update the existing blog entry with the new title and other details
-//       blogs[existingBlogIndex] = blog;
-//     } else {
-//       // Add the new blog entry
-//       blogs.push(blog);
-//     }
-
-//     localStorage.setItem('blogs', JSON.stringify(blogs));
-
-//     refreshTable();
-
-//     document.getElementById("blogTitle").value = "";
-//     if (fileInput) fileInput.value = ""; // Check if fileInput exists
-//     document.getElementById("blogBody").value = "";
-//   };
-
-//   reader.readAsDataURL(file);
-// }
-
-
+// add blog
 function addBlog() {
   let title = document.getElementById("blogTitle").value;
   let fileInput = document.getElementById("file");
@@ -160,10 +106,9 @@ function updateBlog(button) {
   let fileSrcElement = cells[1].getElementsByTagName("img")[0]; // Get the image element
   let fileSrc = fileSrcElement ? fileSrcElement.src : ''; // Check if the image exists before accessing its src
   let body = cells[2].textContent; // Use textContent instead of innerHTML to get the plain text
-  console.log(fileSrcElement, "********", body, "***********", title,)
   document.getElementById("blogTitle").value = title;
   // You may want to reset the file input only if the fileSrc is not empty
-  document.getElementById("blogBody").value = body+"----"+fileSrc;
+  document.getElementById("blogBody").value = body;
   if (fileSrc) {
     const fileInput = document.getElementById("file");
 
