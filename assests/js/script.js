@@ -9,8 +9,8 @@ if (button) {
 
 // Modal
 let modal = document.getElementById("myModal");
-let btn = document.querySelector(".openModalBtn"); // Use querySelector for single element
-let span = document.querySelector(".close"); // Use querySelector for single element
+let btn = document.querySelectorAll(".openModalBtn"); // Use querySelector for single element
+let span = document.querySelectorAll(".close"); // Use querySelector for single element
 
 // Check if modal and buttons exist before adding event listeners
 if (modal && btn && span) {
@@ -28,7 +28,14 @@ if (modal && btn && span) {
     }
   }
 }
+document.addEventListener("change", () => {
+  const fileInput = document.getElementById("file");
+  console.log(fileInput.files)
+})
 
+console.log(modal,"---1----",
+  btn,"---2----",
+  span)
 // add blog
 function addBlog() {
   let title = document.getElementById("blogTitle").value;
@@ -50,6 +57,7 @@ function addBlog() {
       fileSrc: imageUrl, // Keep the same image source by default
       body: body
     };
+    console.log(imageUrl, "*********************")
 
     let blogs = JSON.parse(localStorage.getItem('blogs')) || [];
 
@@ -108,20 +116,23 @@ function updateBlog(button) {
   let body = cells[2].textContent; // Use textContent instead of innerHTML to get the plain text
   document.getElementById("blogTitle").value = title;
   // You may want to reset the file input only if the fileSrc is not empty
+
   document.getElementById("blogBody").value = body;
   if (fileSrc) {
     const fileInput = document.getElementById("file");
 
     // Create a new File object with the file source and name
-    const file = new File([fileSrcElement], fileSrc.split('/').pop(), { type: 'image/*' });
-
+    const file = new File([fileSrcElement], fileSrc, { type: 'image/*' });
+    console.log(file.name, "__________________")
     // Create a new FileList containing the File object
     const fileList = new DataTransfer();
     fileList.items.add(file);
-
+    console.log(fileInput.files, "________1__________")
     // Set the files property of the file input to the new FileList
     fileInput.files = fileList.files;
-}
+    console.log(fileInput.files, "________2__________")
+
+  }
 }
 
 
