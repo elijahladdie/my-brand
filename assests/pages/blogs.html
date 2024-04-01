@@ -48,7 +48,6 @@
             </ul>
             <ul>
                 <li class="text-xs underline-move"><a href="./login.html">Login</a></li>
-
             </ul>
 
 
@@ -56,64 +55,127 @@
 
     </nav>
     <div class="flex flex-col ">
-        <div id="divdend"></div>
+        <!-- <div id="divdend"></div> -->
+        <div class="flex flex-col lg:flex-row gap-8 pad-y justify-center items-center w-screen" id="blogContainer">
+            <!-- Blogs will be dynamically generated here -->
+        </div>
+
     </div>
     </div>
     <script src="../js/script.js">
     </script>
     <script>
-        // Retrieve blogs array from localStorage
-        const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+        const getInitials = (fullName) => {
+            const nameParts = fullName.split(" ");
+            const firstInitial = nameParts[0].charAt(0).toUpperCase();
 
-        // Generate HTML structure for each blog
-        const blogHTML = blogs.map(blog => {
-            console.log(blog.fileSrc)
-            return `
-    <div class="flex flex-col bg-white w-grid rounded">
-        <h1 class="text-lg text-end pad"> ${blog.title}</h1>
-        <div class="gap-8 rounded w-full pad flex items-center flex-row">
-            <img src="${blog.fileSrc}" alt="" class="blog_image">
-            <p>${blog.body}</p>
-        </div>
-        <div class="flex justify-between pad ">
-            <span class="flex gap-8 relative">
-                <i class="fa-regular fa-envelope text-sm " id="openModalBtn"></i>
-                <div class="modal-content flex flex-col justify-between gap-8 hidden" id="myModal">
-                    <div>
-                        <div class="flex justify-between">
-                            <h4>Comments</h4>
-                            <span class="close">&times;</span>
-                        </div>
-                        <div class="flex items-center gap-8 ">
-                            <img src="../img/profile-pic.jpg" alt="" class="profile-pic">
-                            <small class="text-xs">Well that was nice exploring</small>
-                            <small class="text-xs">10:14 PM</small>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between gap-2">
-                        <input class="comments" name="comments" placeholder="Write comment ......" />
-                        <button type="submit" class="text-sm w-fit"><i class="fa-solid fa-plus" style="color: #c0c0c0;"></i></button>
-                    </div>
+            if (nameParts.length === 1) {
+                return `<span class="text-white text-lg  font-bold ">${firstInitial}</span>`;
+            }
+
+            const secondInitial = nameParts[1].charAt(0).toUpperCase();
+
+            return `<div class="flex rounded ">
+                <span class="text-gray text-lg  font-bold">${firstInitial}</span>
+                <span class="text-white text-lg  font-bold">${secondInitial}</span>
+            </div>`;
+        };
+
+        function formatTimestamp(timestamp) {
+            const date = new Date(timestamp);
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const hour = date.getHours() > 12 ? (date.getHours() - 12).toString().padStart(2, '0') : date.getHours().toString().padStart(2, '0');
+            const minute = date.getMinutes().toString().padStart(2, '0');
+            const period = date.getHours() >= 12 ? 'PM' : 'AM';
+
+            return `${year}-${month}-${day} ${hour}:${minute} ${period}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const blogContainer = document.getElementById('blogContainer');
+
+            blogContainer.addEventListener('click', function (event) {
+                const target = event.target;
+
+                if (target.classList.contains('openModalBtn')) {
+                    // If the click target is the open modal button
+                    const modal = target.nextElementSibling;
+                    modal.classList.toggle('hidden');
+                } else if (target.classList.contains('close')) {
+                    // If the click target is the close button
+                    const modal = target.closest('.modal-content');
+                    modal.classList.add('hidden');
+                }
+            });
+
+
+            fetch('https://my-brand-backend-vq8n.onrender.com/blog/all', {
+                headers: {
+                    'Authorization': `Bearer ${bearerToken}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(blogs => {
+                  
+                    const blogHTML = blogs?.data?.map(blog => {
+                        const commentsHTML = blog.comments.map(comment => `
+            <div class="comment">
+                <div class="flex items-center gap-8">
+                    <div class="profile-text text-center flex items-center justify-center rounded">${getInitials(comment.name)}</div>
+                    <small class="text-xs">${comment.comment}</small>
+                    <small class="text-xs">${formatTimestamp(comment.createdAt)}</small>
                 </div>
-                <i class="fa-solid fa-thumbs-up text-sm"></i>
-            </span>
-            <span>uploaded on ${blog.uploadedDate}</span>
-        </div>
-    </div>
-    `;
-        }).join('');
+            </div>
+        `).join('');
 
-        // Create container div and set its innerHTML to the generated blog HTML
-        const container = document.getElementById('divdend');
-        container.innerHTML = `
-    <h1 class="text-xl text-end pad w-fill">Blogs</h1>
-    <div id="About" class="flex flex-col lg:flex-row gap-8 pad-y justify-center items-center w-screen">
-        ${blogHTML}
-    </div>
-`;
-
-        // Store the formatted HTML in localStorage
-        localStorage.setItem('formattedBlogs', container.innerHTML);
+                        return `
+            <div class="flex flex-col bg-white w-grid rounded">
+                <h1 class="text-lg text-end pad">${blog.blogTitle}</h1>
+                <div class="gap-8 rounded w-full pad flex items-center flex-row">
+                    <img src="${blog.blogImage}" alt="" class="blog_image">
+                    <p>${blog.blogBody}</p>
+                </div>
+             
+                <div class="flex justify-between pad">
+                    <span class="flex gap-8 relative ">
+                        <i class="fa-regular fa-envelope text-sm openModalBtn"></i>
+                        <div class="modal-content flex flex-col justify-between gap-8 hidden comment-division pad">
+                            <div class="comment-content bg-white w-fit">
+                                <div class="flex justify-between">
+                                    <h4>Comments</h4>
+                                    <span class="close">&times;</span>
+                                </div>
+                                <div class="flex items-center gap-8 flex-col">
+                                    ${commentsHTML}
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between gap-2 pad">
+                                <input class="name" name="name" placeholder="Name Please" />
+                                <input class="comment" name="comment" placeholder="Write comment ....." />
+                                <button type="submit" class="text-sm w-fit"><i class="fa-solid fa-plus" style="color: #c0c0c0;"></i></button>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-thumbs-up text-sm"></i>
+                    </span>
+                    <span>Uploaded on ${formatTimestamp(blog.createdAt)}</span>
+                </div>
+            </div>
+        `;
+                    }).join('');
+                    // Insert the generated HTML into the container
+                    blogContainer.innerHTML = blogHTML;
+                })
+                .catch(error => {
+                    console.error('Error fetching blogs:', error);
+                });
+        });
 
     </script>
 </body>
