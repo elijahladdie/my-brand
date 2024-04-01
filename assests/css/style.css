@@ -13,10 +13,11 @@ body {
     background: #D9D9D9;
     min-height: 100vh;
 }
+
 .error-message {
     color: red;
     font-size: 12px;
-  }
+}
 
 .flex {
     display: flex;
@@ -113,6 +114,10 @@ nav.large {
     transition: width 0.3s ease;
 }
 
+.m-2 {
+    margin: 4px;
+}
+
 .underline-move:hover::after {
     width: 80%;
 }
@@ -143,10 +148,12 @@ img.h-fit {
 .h-fit {
     width: 20rem;
 }
-.form-fit{
-    height: fit-content!important;
-    width: fit-content!important;
+
+.form-fit {
+    height: fit-content !important;
+    width: fit-content !important;
 }
+
 .w-fill {
     width: 100%;
 }
@@ -158,37 +165,42 @@ img.h-fit {
     background-color: #D9D9D9;
     box-shadow: 0 0px 2px #0000001a;
 }
-table thead tr th{
+
+table thead tr th {
     border-bottom-style: groove;
-    border-bottom: 1px solid black!important;
+    border-bottom: 1px solid black !important;
 }
 
 
-table thead th{
-    text-align: start ;
+table thead th {
+    text-align: start;
 }
 
-.bg-red{
+.bg-red {
     background: #FF0000;
     padding: 5px 10px;
     color: white;
     border-radius: 5px;
 }
-.bg-primary{
+
+.bg-primary {
     background: #37d0ff;
     padding: 5px 10px;
     color: white;
     border-radius: 5px;
 
 }
-table tbody img{
+
+table tbody img {
     width: 4rem;
     height: 4rem;
     border-radius: 50%;
 }
-table{
-    margin-top: 20px!important;
+
+table {
+    margin-top: 20px !important;
 }
+
 .w-96 {
     width: 25rem;
 }
@@ -283,41 +295,36 @@ table{
 
 }
 
-/* The Modal (background) */
-.modal {
-    display: none;
-    /* position: fixed; */
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal button {
-
-    padding: 8px 20px;
-}
-
-/* Modal Content/Box */
-.modal-content {
-    background-color: #fefefe;
-    /* margin: 15% auto; */
-    padding: 20px;
-    /* border: 1px solid #888; */
-    box-shadow: 0px 0px 2px #888;
-    border-radius: 8px;
-    width: 40vh;
-    overflow-y: scroll;
-    height: 30vh;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-}
-i:hover{
+i:hover {
     color: #aaa;
+}
+
+.comment-division {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Semi-transparent background */
+    z-index: 9999;
+    /* Ensure the division appears on top of other content */
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    /* Enable vertical scrolling if content exceeds viewport */
+}
+
+.comment-content {
+    width: 80%;
+    /* Adjust width as needed */
+    max-height: 80%;
+    /* Adjust max-height as needed */
+    padding: 20px;
+    border-radius: 10px;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); */
+    overflow-y: auto;
+    /* Enable vertical scrolling if content exceeds height */
 }
 
 .comments {
@@ -328,6 +335,7 @@ i:hover{
     width: 100%;
     border-radius: 9px;
 }
+
 small.text-xs {
     font-size: 10px;
     white-space: nowrap;
@@ -342,6 +350,32 @@ small.text-xs {
     font-weight: bold;
 }
 
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.close-button:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Add the text-custom-yellow class */
+.text-gray {
+    color: #D9D9D9;
+    /* Yellow color */
+}
+
+.text-white {
+    color: white;
+}
+
 .close:hover,
 .close:focus {
     color: black;
@@ -349,12 +383,11 @@ small.text-xs {
     cursor: pointer;
 }
 
-.profile-pic {
+.profile-text {
     width: 3rem;
     height: 3rem;
-    border-radius: 50%;
-    filter: blur(1px);
-    filter: invert(4px);
+    background: #000;
+    
 }
 
 /**Form */
@@ -441,15 +474,18 @@ small.text-xs {
         flex-wrap: wrap;
         align-items: center;
     }
+
     .modal-content {
         left: 0;
-        padding:5px 2px ;
+        padding: 5px 2px;
     }
-    button.text-sm.w-fit{
+
+    button.text-sm.w-fit {
         font-size: 2rem;
         padding: 0;
         margin-right: 18px;
     }
+
     .flex.skills:nth-child(2) {
         flex-wrap: wrap-reverse;
     }
@@ -466,10 +502,12 @@ small.text-xs {
         min-width: 20rem;
         max-width: 30rem;
     }
+
     .comments {
-        margin-top: 5px;        
+        margin-top: 5px;
         width: 80%;
     }
+
     .flex.flex-row {
         flex-direction: column;
     }
@@ -538,10 +576,12 @@ small.text-xs {
     .flex.gap-8 {
         font-size: 12px;
     }
+
     .blog_image {
         width: 15rem;
         height: 8rem;
     }
+
     .w-grid {
         min-width: 18rem;
         max-width: 19rem;

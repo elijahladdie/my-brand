@@ -1,4 +1,18 @@
-// Toggle navigation visibility
+function getBearerToken() {
+  // Retrieve token from local storage
+  const token = localStorage.getItem('token');
+
+  // Check if token exists
+  if (token) {
+    return token;
+  } else {
+    return null;
+  }
+}
+
+// Example usage:
+const bearerToken = getBearerToken();
+
 const getNav = document.getElementById("navItems");
 const button = document.getElementById("navButton");
 if (button) {
@@ -8,158 +22,231 @@ if (button) {
 }
 
 // Modal
-let modal = document.getElementById("myModal");
-let btn = document.querySelectorAll(".openModalBtn"); // Use querySelector for single element
-let span = document.querySelectorAll(".close"); // Use querySelector for single element
+let popups = document.querySelectorAll(".comment-division");
+let btns = document.querySelectorAll(".openModalBtn");
+let closeBtns = document.querySelectorAll(".close");
+console.log(closeBtns,"***************")
+if (popups && btns && closeBtns) {
+  btns.forEach((btn, index) => {
+    btn.addEventListener('click', () => {
+      popups[index].classList.toggle("hidden");
+    });
+  });
 
-// Check if modal and buttons exist before adding event listeners
-if (modal && btn && span) {
-  btn.onclick = function () {
-    modal.style.display = "block";
-  }
+  closeBtns.forEach((closeBtn, index) => {
+    closeBtn.addEventListener('click', () => {
+      popups[index].classList.toggle("hidden");
+    });
+  });
 
-  span.onclick = function () {
-    modal.style.display = "none";
-  }
-
-  window.onclick = function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  }
+  window.addEventListener('click', (event) => {
+    popups.forEach(popup => {
+      if (!popup.contains(event.target)) {
+        popup.classList.add("hidden");
+      }
+    });
+  });
 }
+
 document.addEventListener("change", () => {
   const fileInput = document.getElementById("file");
   console.log(fileInput.files)
-})
+});
 
-console.log(modal,"---1----",
-  btn,"---2----",
-  span)
 // add blog
 function addBlog() {
-  let title = document.getElementById("blogTitle").value;
+  let titleInput = document.getElementById("blogTitle");
   let fileInput = document.getElementById("file");
+  let bodyInput = document.getElementById("blogBody");
+  let blogIdInput = document.getElementById("blogId"); // Assuming you have an input field for blog ID
+
+  let title = titleInput.value;
   let file = fileInput ? fileInput.files[0] : null;
-  let body = document.getElementById("blogBody").value;
+  let body = bodyInput.value;
+  let blogId = blogIdInput.value;
 
   if (!title || !body) {
     console.log('Incomplete blog details.');
     return;
   }
 
-  let reader = new FileReader();
-  reader.onload = function (event) {
-    let imageUrl = event.target.result;
+  let formData = new FormData();
+  formData.append('blogTitle', title);
+  formData.append('blogImage', file);
+  formData.append('blogBody', body);
 
-    let blog = {
-      title: title,
-      fileSrc: imageUrl, // Keep the same image source by default
-      body: body
-    };
-    console.log(imageUrl, "*********************")
 
-    let blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+  let url = 'https://my-brand-backend-vq8n.onrender.com/blog';
+  let method;
 
-    // Check if the blog with the same title already exists
-    let existingBlogIndex = -1;
-    for (let i = 0; i < blogs.length; i++) {
-      if (blogs[i].title === title) {
-        existingBlogIndex = i;
-        break;
-      }
-    }
-
-    if (existingBlogIndex !== -1) {
-      // Update the existing blog entry with the new title and body
-      blogs[existingBlogIndex] = blog;
-    } else {
-      // Add the new blog entry
-      blogs.push(blog);
-    }
-
-    localStorage.setItem('blogs', JSON.stringify(blogs));
-
-    refreshTable();
-
-    document.getElementById("blogTitle").value = "";
-    if (fileInput) fileInput.value = ""; // Check if fileInput exists
-    document.getElementById("blogBody").value = "";
-  };
-
-  if (file) {
-    reader.readAsDataURL(file);
+  if (blogId) {
+    url += `/update/${blogId}`;
+    method = 'PUT';
   } else {
-    reader.onload({ target: { result: '' } }); // Trigger onload with an empty result if file is not provided
-  }
-}
-
-
-
-function deleteBlog(button) {
-  let row = button.parentNode.parentNode;
-  let index = row.rowIndex;
-
-  let blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-  blogs.splice(index - 1, 1);
-  localStorage.setItem('blogs', JSON.stringify(blogs));
-
-  refreshTable();
-}
-
-function updateBlog(button) {
-  let row = button.parentNode.parentNode;
-  let cells = row.getElementsByTagName("td");
-  let title = cells[0].textContent; // Use textContent instead of innerHTML to get the plain text
-  let fileSrcElement = cells[1].getElementsByTagName("img")[0]; // Get the image element
-  let fileSrc = fileSrcElement ? fileSrcElement.src : ''; // Check if the image exists before accessing its src
-  let body = cells[2].textContent; // Use textContent instead of innerHTML to get the plain text
-  document.getElementById("blogTitle").value = title;
-  // You may want to reset the file input only if the fileSrc is not empty
-
-  document.getElementById("blogBody").value = body;
-  if (fileSrc) {
-    const fileInput = document.getElementById("file");
-
-    // Create a new File object with the file source and name
-    const file = new File([fileSrcElement], fileSrc, { type: 'image/*' });
-    console.log(file.name, "__________________")
-    // Create a new FileList containing the File object
-    const fileList = new DataTransfer();
-    fileList.items.add(file);
-    console.log(fileInput.files, "________1__________")
-    // Set the files property of the file input to the new FileList
-    fileInput.files = fileList.files;
-    console.log(fileInput.files, "________2__________")
+    url += `/create`;
+    method = 'POST';
 
   }
-}
 
-
-// Refresh table function (commented out for now)
-function refreshTable() {
-  let blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-  let table = document?.getElementById("blogTable")?.getElementsByTagName('tbody')[0] || '';
-  if (table) table.innerHTML = ''; // Clear table
-  if (blogs && table) {
-
-    for (let i = 0; i < blogs?.length; i++) {
-      let newRow = table.insertRow(table.rows.length);
-      let titleCell = newRow.insertCell(0);
-      let fileCell = newRow.insertCell(1);
-      let bodyCell = newRow.insertCell(2);
-      let actionCell = newRow.insertCell(3);
-
-      titleCell.innerHTML = blogs[i].title;
-      fileCell.innerHTML = '<img src="' + blogs[i].fileSrc + '" alt="Uploaded Image" style="max-width: 100px; max-height: 100px;">';
-      bodyCell.innerHTML = blogs[i].body;
-      actionCell.innerHTML = '<button onclick="deleteBlog(this)" class="bg-red">Delete</button> <button onclick="updateBlog(this)" class="bg-primary">Update</button>';
+  fetch(url, {
+    method: method,
+    body: formData,
+    headers: {
+      'Authorization': `Bearer ${bearerToken}`
     }
-  }
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Blog', blogId ? 'updated' : 'added', 'successfully:', data);
+      refreshTable();
+    })
+    .catch(error => {
+      console.error('Error', blogId ? 'updating' : 'adding', 'blog:', error);
+    });
 }
+
+
+
+function deleteBlog(blog) {
+  console.log("***************************************")
+  console.log(blog)
+  console.log("***************************************")
+  fetch(`https://my-brand-backend-vq8n.onrender.com/blog/delete/${blog}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${bearerToken}`
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Blog deleted successfully:', data);
+      refreshTable();
+    })
+    .catch(error => {
+      console.error('Error deleting blog:', error);
+    });
+}
+
+
+function updateBlog(blogId) {
+  // Fetch the blog details using its ID
+  fetch(`https://my-brand-backend-vq8n.onrender.com/blog/byid/${blogId}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${bearerToken}`
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(blog => {
+      let title = blog.data.blogTitle;
+      let fileSrc = blog.data.blogImage;
+      let body = blog.data.blogBody;
+
+      // Set form fields with the retrieved data
+      document.getElementById('blogTitle').value = title;
+      document.getElementById('blogBody').value = body;
+      document.getElementById('blogId').value = blogId;
+    })
+    .catch(error => {
+      console.error('Error fetching blog details:', error);
+    });
+}
+
+function refreshTable() {
+  fetch('https://my-brand-backend-vq8n.onrender.com/blog/all', {
+    headers: {
+      'Authorization': `Bearer ${bearerToken}`
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(blogs => {
+      let table = document?.getElementById("blogTable")?.getElementsByTagName('tbody')[0] || '';
+      if (table) table.innerHTML = ''; // Clear table
+      if (blogs && table) {
+        blogs.data.forEach(blog => {
+          let newRow = table.insertRow(table.rows.length);
+          newRow.dataset.blogId = blog._id;
+          let titleCell = newRow.insertCell(0);
+          let fileCell = newRow.insertCell(1);
+          let bodyCell = newRow.insertCell(2);
+          let actionCell = newRow.insertCell(3);
+
+          titleCell.innerHTML = blog.blogTitle;
+          fileCell.innerHTML = `<img src="${blog.blogImage}" alt="Uploaded Image" style="max-width: 100px; max-height: 100px;margin:3px;cursor:pointer" onclick="showImagePreview('${blog.blogImage}')">`;
+          bodyCell.innerHTML = blog.blogBody;
+          actionCell.innerHTML = `<button onclick="deleteBlog('${blog._id}')" class="bg-red m-2">Delete</button> <button onclick="updateBlog('${blog._id}')" class="bg-primary m-2">Update</button>`;
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching blogs:', error);
+    });
+}
+
+// Function to show image preview popup
+function showImagePreview(imageUrl) {
+  // Create a popup division
+  let popup = document.createElement('div');
+  popup.classList.add('popup');
+  
+  // Create a close button
+  let closeButton = document.createElement('button');
+  closeButton.textContent = 'Close';
+  closeButton.classList.add('close-button');
+  closeButton.addEventListener('click', () => {
+    document.body.removeChild(popup); // Remove the popup from the DOM when the close button is clicked
+  });
+  
+  // Set the background image of the popup division
+  popup.style.backgroundImage = `url(${imageUrl})`;
+  
+  // Append the close button and popup division to the body
+  popup.appendChild(closeButton);
+  document.body.appendChild(popup);
+}
+
+
+// CSS styles for the popup division
+const popupStyle = `
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 9999;
+  cursor: zoom-out; /* Change cursor to zoom-out when hovering over the image */
+}`;
+
+// Add the CSS styles to the document head
+const styleElement = document.createElement('style');
+styleElement.innerHTML = popupStyle;
+document.head.appendChild(styleElement);
+
 
 refreshTable();
-// Contact form validation
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
   const contactForm = document.getElementById('contactForm');
 
@@ -242,9 +329,42 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      // If all validations pass, you can submit the form or redirect to dashboard
-      // For now, let's just log the success message
-      window.location.href = "./dashboard.html"
+      // Prepare login data
+      const loginData = {
+        email: email,
+        password: password
+      };
+
+      // Send login request to the backend
+      fetch('https://my-brand-backend-vq8n.onrender.com/admin/access/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Handle successful login
+          console.log('Login successful:', data);
+
+          // Store token in local storage
+          localStorage.setItem('token', data.token);
+
+          // Redirect to dashboard or perform other actions
+          window.location.href = "./dashboard.html";
+        })
+        .catch(error => {
+          // Handle login error
+          console.error('Login failed:', error);
+          // Display error message to the user
+          document.getElementById('email-error').textContent = 'Invalid email or password';
+        });
     });
 
     function validateEmail(email) {
@@ -252,4 +372,39 @@ document.addEventListener('DOMContentLoaded', function () {
       return re.test(String(email).toLowerCase());
     }
   }
+});
+
+function logout() {
+  // Clear token from local storage
+  localStorage.removeItem('token');
+  // Redirect to login page or perform other actions
+  window.location.href = "./login.html"; // Redirect to the login page
+}
+document.addEventListener('DOMContentLoaded', function () {
+  const dashboardPage = document.getElementById('DASHBOARD');
+
+  // Check if token is present in local storage\
+  if (dashboardPage) {
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // If no token found, redirect to login page or display error message
+      window.location.href = "./login.html"; // Redirect to login page
+      // Or display an error message
+      // dashboardPage.innerHTML = '<p>You are not authorized to view this page. Please log in.</p>';
+    }
+  }
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const openModalIcons = document.querySelectorAll('.openModalBtn');
+
+  openModalIcons.forEach(icon => {
+    icon.addEventListener('click', function () {
+      const modalId = this.dataset.modal; // Get the modal ID from the data attribute
+      const modal = document.getElementById(modalId); // Find the modal by its ID
+      modal.classList.toggle('hidden'); // Toggle the 'hidden' class to show/hide the modal
+    });
+  });
 });
