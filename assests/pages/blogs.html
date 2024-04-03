@@ -30,7 +30,6 @@
         </ul>
     </nav>
     <nav class="middle sticky-nav">
-
         <ul class=" flex justify-between pad-y">
             <li class="text-sm underline-move "><a href="../../index.html#KURADUSENGE">KURADUSENGE</a></li>
             <button id="navButton">
@@ -49,21 +48,17 @@
             <ul>
                 <li class="text-xs underline-move"><a href="./login.html">Login</a></li>
             </ul>
-
-
         </nav>
-
     </nav>
     <div class="flex flex-col ">
-        <!-- <div id="divdend"></div> -->
         <div class="flex flex-col lg:flex-row gap-8 pad-y justify-center items-center w-screen" id="blogContainer">
             <!-- Blogs will be dynamically generated here -->
         </div>
+    </div>
 
-    </div>
-    </div>
-    <script src="../js/script.js">
-    </script>
+    <script src="../js/script.js"></script>
+
+
     <script>
         const getInitials = (fullName) => {
             const nameParts = fullName.split(" ");
@@ -81,6 +76,54 @@
             </div>`;
         };
 
+        function createCommentForBlog(blogId) {
+            const nameInput = document.querySelector(`.blog-container[data-blog-id="${blogId}"] input[name="name"]`);
+            const commentInput = document.querySelector(`.blog-container[data-blog-id="${blogId}"] textarea[name="comment"]`);
+
+            const name = nameInput.value;
+            const comment = commentInput.value;
+
+            if (!name || !comment) {
+                showToast('Please fill in both name and comment fields.');
+                return;
+            }
+
+            const commentData = {
+                name: name,
+                comment: comment
+            };
+
+            appendLoader(document.body);
+
+            fetch(`https://my-brand-backend-vq8n.onrender.com/blog/${blogId}/comment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${bearerToken}`
+                },
+                body: JSON.stringify(commentData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    showToast('Comment added successfully:');
+                    removeLoader(document.body);
+                    // Reload all blogs
+                    loadAllBlogs();
+                })
+                .catch(error => {
+                    showToast('Error adding comment. Please try again later.');
+                });
+
+            // Reset input fields after submitting
+            nameInput.value = '';
+            commentInput.value = '';
+        }
+
         function formatTimestamp(timestamp) {
             const date = new Date(timestamp);
             const year = date.getFullYear();
@@ -93,23 +136,9 @@
             return `${year}-${month}-${day} ${hour}:${minute} ${period}`;
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        function loadAllBlogs() {
             const blogContainer = document.getElementById('blogContainer');
-
-            blogContainer.addEventListener('click', function (event) {
-                const target = event.target;
-
-                if (target.classList.contains('openModalBtn')) {
-                    // If the click target is the open modal button
-                    const modal = target.nextElementSibling;
-                    modal.classList.toggle('hidden');
-                } else if (target.classList.contains('close')) {
-                    // If the click target is the close button
-                    const modal = target.closest('.modal-content');
-                    modal.classList.add('hidden');
-                }
-            });
-
+            appendLoader(blogContainer);
 
             fetch('https://my-brand-backend-vq8n.onrender.com/blog/all', {
                 headers: {
@@ -123,61 +152,84 @@
                     return response.json();
                 })
                 .then(blogs => {
-                  
                     const blogHTML = blogs?.data?.map(blog => {
                         const commentsHTML = blog.comments.map(comment => `
-            <div class="comment">
-                <div class="flex items-center gap-8">
-                    <div class="profile-text text-center flex items-center justify-center rounded">${getInitials(comment.name)}</div>
-                    <small class="text-xs">${comment.comment}</small>
-                    <small class="text-xs">${formatTimestamp(comment.createdAt)}</small>
-                </div>
-            </div>
-        `).join('');
+                                <div class="flex items-center gap-8 justify-between w-full pad-x">
+                                    <div class="profile-text text-center flex items-center justify-center rounded" title="${comment.name}">${getInitials(comment.name)}</div>
+                                    <small class="text-xs">${comment.comment}</small>
+                                    <small class="text-xs">${formatTimestamp(comment.createdAt)}</small>
+                                </div>
+                            `).join('');
 
                         return `
-            <div class="flex flex-col bg-white w-grid rounded">
-                <h1 class="text-lg text-end pad">${blog.blogTitle}</h1>
-                <div class="gap-8 rounded w-full pad flex items-center flex-row">
-                    <img src="${blog.blogImage}" alt="" class="blog_image">
-                    <p>${blog.blogBody}</p>
-                </div>
-             
-                <div class="flex justify-between pad">
-                    <span class="flex gap-8 relative ">
-                        <i class="fa-regular fa-envelope text-sm openModalBtn"></i>
-                        <div class="modal-content flex flex-col justify-between gap-8 hidden comment-division pad">
-                            <div class="comment-content bg-white w-fit">
-                                <div class="flex justify-between">
-                                    <h4>Comments</h4>
-                                    <span class="close">&times;</span>
-                                </div>
-                                <div class="flex items-center gap-8 flex-col">
-                                    ${commentsHTML}
+                            <div class="blog-container" data-blog-id="${blog._id}">
+                                <div class="flex flex-col bg-white w-grid rounded">
+                                    <h1 class="text-lg text-end pad">${blog.blogTitle}</h1>
+                                    <div class="gap-8 rounded w-full pad flex items-center flex-row">
+                                        <img src="${blog.blogImage}" alt="" class="blog_image">
+                                        <p>${blog.blogBody}</p>
+                                    </div>
+                                    <div class="flex justify-between pad">
+                                        <span class="flex gap-8 relative ">
+                                            <div class=" envelope-container openModalBtn">
+        <i class="fa-regular fa-envelope text-sm  "></i>
+        <span class="envelope-count ">${blog.comments.length}</span>
+    </div>
+                                            <div class="modal-content flex flex-col justify-between gap-8 hidden comment-division pad w-full">
+                                                <div class="comment-content bg-white w-fit">
+                                                    <div class="flex justify-between items-center">
+                                                        <h4 class="pad-x">Comments</h4>
+                                                        <span class="pad-x close">&times;</span>
+                                                    </div>
+                                                    <div class="flex items-center gap-8 flex-col">
+                                                        ${commentsHTML}
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center justify-between gap-2 pad bg-white for-comment">
+                                                    <input class="pad-x pad-y" name="name" placeholder="Name " />
+                                                    <textarea class="pad-x pad-y" name="comment" placeholder="Write comment ....."></textarea>
+                                                    <button type="submit" class="text-sm w-fit"><i class="fa-solid fa-plus" style="color: #c0c0c0;"></i></button>
+                                                </div>
+                                            </div>
+                                            <button title="Post comment"><i class="fa-solid fa-thumbs-up text-sm"></i></button>
+                                        </span>
+                                        <span>Uploaded on ${formatTimestamp(blog.createdAt)}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="flex items-center justify-between gap-2 pad">
-                                <input class="name" name="name" placeholder="Name Please" />
-                                <input class="comment" name="comment" placeholder="Write comment ....." />
-                                <button type="submit" class="text-sm w-fit"><i class="fa-solid fa-plus" style="color: #c0c0c0;"></i></button>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-thumbs-up text-sm"></i>
-                    </span>
-                    <span>Uploaded on ${formatTimestamp(blog.createdAt)}</span>
-                </div>
-            </div>
-        `;
+                        `;
                     }).join('');
-                    // Insert the generated HTML into the container
+
                     blogContainer.innerHTML = blogHTML;
+                    removeLoader(blogContainer);
                 })
                 .catch(error => {
                     console.error('Error fetching blogs:', error);
+                    removeLoader(blogContainer);
                 });
-        });
+        }
 
-    </script>
+        document.addEventListener('DOMContentLoaded', function () {
+            loadAllBlogs();
+
+            const blogContainer = document.getElementById('blogContainer');
+
+            blogContainer.addEventListener('click', function (event) {
+                const target = event.target;
+
+                if (target.classList.contains('openModalBtn')) {
+                    const modal = target.nextElementSibling;
+                    console.log(modal)
+                    modal.classList.toggle('hidden');
+                } else if (target.classList.contains('close')) {
+                    const modal = target.closest('.modal-content');
+                    modal.classList.add('hidden');
+                } else if (target.classList.contains('fa-plus')) {
+                    const blogId = target.closest('.blog-container').dataset.blogId;
+                    createCommentForBlog(blogId);
+                }
+            });
+        }); </script>
 </body>
 
 </html>

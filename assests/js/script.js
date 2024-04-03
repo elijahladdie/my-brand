@@ -1,3 +1,47 @@
+function showToast(message) {
+  let snackbar = document.getElementById("snackbar");
+
+  // If snackbar element doesn't exist, create it dynamically
+  if (!snackbar) {
+    snackbar = document.createElement('div');
+    snackbar.id = 'snackbar';
+    document.body.appendChild(snackbar);
+  }
+
+  snackbar.className = 'show';
+  snackbar.innerText = message;
+
+  setTimeout(function () {
+    snackbar.classList.remove('show');
+    snackbar.innerText = '';
+  }, 3000);
+}
+
+function createLoader() {
+  const loaderContainer = document.createElement('div');
+  loaderContainer.classList.add('loader-container');
+  const loaderSpan = document.createElement('span');
+  loaderSpan.classList.add('loader');
+  loaderContainer.appendChild(loaderSpan);
+  return loaderContainer;
+}
+
+
+// Function to append loader span
+function appendLoader() {
+  const loaderContainer = createLoader();
+  document.body.appendChild(loaderContainer);
+}
+
+// Function to remove loader span
+function removeLoader() {
+  const loaderContainer = document.querySelector('.loader-container');
+  if (loaderContainer) {
+    loaderContainer.parentNode.removeChild(loaderContainer);
+  }
+}
+
+
 function getBearerToken() {
   // Retrieve token from local storage
   const token = localStorage.getItem('token');
@@ -25,7 +69,6 @@ if (button) {
 let popups = document.querySelectorAll(".comment-division");
 let btns = document.querySelectorAll(".openModalBtn");
 let closeBtns = document.querySelectorAll(".close");
-console.log(closeBtns,"***************")
 if (popups && btns && closeBtns) {
   btns.forEach((btn, index) => {
     btn.addEventListener('click', () => {
@@ -50,7 +93,6 @@ if (popups && btns && closeBtns) {
 
 document.addEventListener("change", () => {
   const fileInput = document.getElementById("file");
-  console.log(fileInput.files)
 });
 
 // add blog
@@ -66,9 +108,11 @@ function addBlog() {
   let blogId = blogIdInput.value;
 
   if (!title || !body) {
-    console.log('Incomplete blog details.');
+    showToast('Incomplete blog details.');
     return;
   }
+
+  appendLoader(document.body); // Append loader span before performing action
 
   let formData = new FormData();
   formData.append('blogTitle', title);
@@ -97,20 +141,20 @@ function addBlog() {
   })
     .then(response => response.json())
     .then(data => {
-      console.log('Blog', blogId ? 'updated' : 'added', 'successfully:', data);
+      showToast(data.message);
       refreshTable();
+      removeLoader(document.body); 
     })
     .catch(error => {
-      console.error('Error', blogId ? 'updating' : 'adding', 'blog:', error);
+      showToast(error.message);
+      removeLoader(document.body); 
     });
 }
 
 
 
 function deleteBlog(blog) {
-  console.log("***************************************")
-  console.log(blog)
-  console.log("***************************************")
+  
   fetch(`https://my-brand-backend-vq8n.onrender.com/blog/delete/${blog}`, {
     method: 'DELETE',
     headers: {
@@ -124,11 +168,12 @@ function deleteBlog(blog) {
       return response.json();
     })
     .then(data => {
-      console.log('Blog deleted successfully:', data);
+      showToast(data.message);
+     
       refreshTable();
     })
     .catch(error => {
-      console.error('Error deleting blog:', error);
+      showToast(error.message);
     });
 }
 
@@ -184,11 +229,15 @@ function refreshTable() {
           let titleCell = newRow.insertCell(0);
           let fileCell = newRow.insertCell(1);
           let bodyCell = newRow.insertCell(2);
-          let actionCell = newRow.insertCell(3);
+          let commentCell = newRow.insertCell(3);
+          let likeCell = newRow.insertCell(4);
+          let actionCell = newRow.insertCell(5);
 
-          titleCell.innerHTML = blog.blogTitle;
+          titleCell.innerHTML = blog.blogTitle.slice(0, 6) + "...";
           fileCell.innerHTML = `<img src="${blog.blogImage}" alt="Uploaded Image" style="max-width: 100px; max-height: 100px;margin:3px;cursor:pointer" onclick="showImagePreview('${blog.blogImage}')">`;
-          bodyCell.innerHTML = blog.blogBody;
+          bodyCell.innerHTML = blog.blogBody.slice(0, 6) + "...";
+          commentCell.innerHTML = blog.comments.length;
+          likeCell.innerHTML = blog.likes;
           actionCell.innerHTML = `<button onclick="deleteBlog('${blog._id}')" class="bg-red m-2">Delete</button> <button onclick="updateBlog('${blog._id}')" class="bg-primary m-2">Update</button>`;
         });
       }
@@ -203,7 +252,7 @@ function showImagePreview(imageUrl) {
   // Create a popup division
   let popup = document.createElement('div');
   popup.classList.add('popup');
-  
+
   // Create a close button
   let closeButton = document.createElement('button');
   closeButton.textContent = 'Close';
@@ -211,10 +260,10 @@ function showImagePreview(imageUrl) {
   closeButton.addEventListener('click', () => {
     document.body.removeChild(popup); // Remove the popup from the DOM when the close button is clicked
   });
-  
+
   // Set the background image of the popup division
   popup.style.backgroundImage = `url(${imageUrl})`;
-  
+
   // Append the close button and popup division to the body
   popup.appendChild(closeButton);
   document.body.appendChild(popup);
@@ -259,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const body = document.getElementById('body') ? document.getElementById('body').value : null; // Check if body input exists
 
       if (!email || !subject || !body) {
-        console.log('Incomplete form details.');
+        showToast('Incomplete form details.');
         return;
       }
 
@@ -286,8 +335,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      // If all validations pass, you can submit the form or perform any other actions here
-      console.log('Form submitted successfully!');
+      showToast('Form submitted successfully!');
     });
   }
 
@@ -297,7 +345,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
-// Login form validation
 document.addEventListener('DOMContentLoaded', function () {
   const loginForm = document.getElementById('loginForm');
 
@@ -305,37 +352,31 @@ document.addEventListener('DOMContentLoaded', function () {
     loginForm.addEventListener('submit', function (event) {
       event.preventDefault();
 
-      const email = document.getElementById('email') ? document.getElementById('email').value : null; // Check if email input exists
-      const password = document.getElementById('password') ? document.getElementById('password').value : null; // Check if password input exists
+      const email = document.getElementById('email') ? document.getElementById('email').value : null; 
+      const password = document.getElementById('password') ? document.getElementById('password').value : null; 
 
       if (!email || !password) {
-        console.log('Incomplete login details.');
+        showToast('Incomplete login details.');
         return;
       }
 
-      // Reset error messages
       document.getElementById('email-error').textContent = '';
       document.getElementById('password-error').textContent = '';
 
-      // Email validation
       if (!validateEmail(email)) {
         document.getElementById('email-error').textContent = 'Please enter a valid email address.';
         return;
       }
 
-      // Password validation
       if (password.length < 6) {
         document.getElementById('password-error').textContent = 'Password must be at least 6 characters long.';
         return;
       }
 
-      // Prepare login data
       const loginData = {
         email: email,
         password: password
       };
-
-      // Send login request to the backend
       fetch('https://my-brand-backend-vq8n.onrender.com/admin/access/login', {
         method: 'POST',
         headers: {
@@ -350,19 +391,12 @@ document.addEventListener('DOMContentLoaded', function () {
           return response.json();
         })
         .then(data => {
-          // Handle successful login
-          console.log('Login successful:', data);
-
-          // Store token in local storage
+          showToast(data.message);
           localStorage.setItem('token', data.token);
-
-          // Redirect to dashboard or perform other actions
           window.location.href = "./dashboard.html";
         })
         .catch(error => {
-          // Handle login error
-          console.error('Login failed:', error);
-          // Display error message to the user
+          showToast(error.message);
           document.getElementById('email-error').textContent = 'Invalid email or password';
         });
     });
@@ -375,23 +409,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function logout() {
-  // Clear token from local storage
   localStorage.removeItem('token');
-  // Redirect to login page or perform other actions
-  window.location.href = "./login.html"; // Redirect to the login page
+  window.location.href = "./login.html";
 }
 document.addEventListener('DOMContentLoaded', function () {
   const dashboardPage = document.getElementById('DASHBOARD');
 
-  // Check if token is present in local storage\
   if (dashboardPage) {
 
     const token = localStorage.getItem('token');
     if (!token) {
-      // If no token found, redirect to login page or display error message
-      window.location.href = "./login.html"; // Redirect to login page
-      // Or display an error message
-      // dashboardPage.innerHTML = '<p>You are not authorized to view this page. Please log in.</p>';
+      window.location.href = "./login.html"; 
+    
     }
   }
 });
@@ -402,9 +431,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   openModalIcons.forEach(icon => {
     icon.addEventListener('click', function () {
-      const modalId = this.dataset.modal; // Get the modal ID from the data attribute
-      const modal = document.getElementById(modalId); // Find the modal by its ID
-      modal.classList.toggle('hidden'); // Toggle the 'hidden' class to show/hide the modal
+      const modalId = this.dataset.modal;
+      const modal = document.getElementById(modalId); 
+      modal.classList.toggle('hidden'); 
     });
   });
 });
