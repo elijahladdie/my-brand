@@ -1,3 +1,35 @@
+const getInitials = (fullName) => {
+  const nameParts = fullName.split(" ");
+  const firstInitial = nameParts[0].charAt(0).toUpperCase();
+
+  if (nameParts.length === 1) {
+    return `<span class="text-white text-lg  font-bold ">${firstInitial}</span>`;
+  }
+
+  const secondInitial = nameParts[1].charAt(0).toUpperCase();
+
+  return `<div class="flex rounded ">
+      <span class="text-gray text-sm  font-bold">${firstInitial}</span>
+      <span class="text-white text-sm  font-bold">${secondInitial}</span>
+  </div>`;
+};
+
+function formatTimestamp(timestamp) {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hour = date.getHours() > 12 ? (date.getHours() - 12).toString().padStart(2, '0') : date.getHours().toString().padStart(2, '0');
+  const minute = date.getMinutes().toString().padStart(2, '0');
+  const period = date.getHours() >= 12 ? 'PM' : 'AM';
+
+  return `${year}-${month}-${day} ${hour}:${minute} ${period}`;
+}
+
+function validateEmail(email) {
+  const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return re.test(String(email).toLowerCase());
+}
 function showToast(message) {
   let snackbar = document.getElementById("snackbar");
 
@@ -25,8 +57,6 @@ function createLoader() {
   loaderContainer.appendChild(loaderSpan);
   return loaderContainer;
 }
-
-
 // Function to append loader span
 function appendLoader() {
   const loaderContainer = createLoader();
@@ -112,7 +142,7 @@ function addBlog() {
     return;
   }
 
-  appendLoader(document.body); // Append loader span before performing action
+  appendLoader(document.body);
 
   let formData = new FormData();
   formData.append('blogTitle', title);
@@ -143,18 +173,19 @@ function addBlog() {
     .then(data => {
       showToast(data.message);
       refreshTable();
-      removeLoader(document.body); 
+      removeLoader(document.body);
     })
     .catch(error => {
+
       showToast(error.message);
-      removeLoader(document.body); 
+      removeLoader(document.body);
     });
 }
 
 
 
 function deleteBlog(blog) {
-  
+  appendLoader(document.body);
   fetch(`https://my-brand-backend-vq8n.onrender.com/blog/delete/${blog}`, {
     method: 'DELETE',
     headers: {
@@ -169,17 +200,19 @@ function deleteBlog(blog) {
     })
     .then(data => {
       showToast(data.message);
-     
       refreshTable();
+      removeLoader(document.body);
     })
     .catch(error => {
       showToast(error.message);
+      removeLoader(document.body);
     });
 }
 
 
 function updateBlog(blogId) {
-  // Fetch the blog details using its ID
+  // Fetch the blog details using its ID 
+  appendLoader(document.body);
   fetch(`https://my-brand-backend-vq8n.onrender.com/blog/byid/${blogId}`, {
     method: 'GET',
     headers: {
@@ -187,9 +220,8 @@ function updateBlog(blogId) {
     }
   })
     .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+      showToast(response.message);
+      removeLoader(document.body);
       return response.json();
     })
     .then(blog => {
@@ -203,11 +235,13 @@ function updateBlog(blogId) {
       document.getElementById('blogId').value = blogId;
     })
     .catch(error => {
-      console.error('Error fetching blog details:', error);
+      showToast(error.message);
+      removeLoader(document.body);
     });
 }
 
 function refreshTable() {
+  appendLoader(document.body);
   fetch('https://my-brand-backend-vq8n.onrender.com/blog/all', {
     headers: {
       'Authorization': `Bearer ${bearerToken}`
@@ -215,8 +249,13 @@ function refreshTable() {
   })
     .then(response => {
       if (!response.ok) {
+
+        showToast('Network response was not ok');
+        removeLoader(document.body);
         throw new Error('Network response was not ok');
+
       }
+      removeLoader(document.body);
       return response.json();
     })
     .then(blogs => {
@@ -238,14 +277,148 @@ function refreshTable() {
           bodyCell.innerHTML = blog.blogBody.slice(0, 6) + "...";
           commentCell.innerHTML = blog.comments.length;
           likeCell.innerHTML = blog.likes;
-          actionCell.innerHTML = `<button onclick="deleteBlog('${blog._id}')" class="bg-red m-2">Delete</button> <button onclick="updateBlog('${blog._id}')" class="bg-primary m-2">Update</button>`;
+          actionCell.innerHTML = `<button onclick="deleteBlog('${blog._id}')" class="bg-red m-2">Delete</button>
+                            <button onclick="updateBlog('${blog._id}')" class="bg-primary m-2">Update</button>
+                            <button onclick="viewBlog('${blog._id}')" class="bg-primary m-2">View</button>`;
+
         });
       }
     })
     .catch(error => {
-      console.error('Error fetching blogs:', error);
+      showToast(error.message);
+      removeLoader(document.body);
     });
 }
+// Function to view a specific blog
+function viewBlog(blogId) {
+  appendLoader(document.body);
+
+  fetch(`https://my-brand-backend-vq8n.onrender.com/blog/byid/${blogId}`, {
+    headers: {
+      'Authorization': `Bearer ${bearerToken}`
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        showToast('Network response was not ok');
+        throw new Error('Network response was not ok');
+      }
+
+      removeLoader(document.body);
+
+      return response.json();
+    })
+    .then(data => {
+      showToast(data.message);
+      const blog = data.data; // Extract blog data from response
+      // Create a popup to display the blog details
+      const popup = document.createElement('div');
+      popup.classList.add('popup', 'bg-white', 'pad', 'rounded', 'w-grid');
+
+      // Blog container
+      const blogContainer = document.createElement('div');
+      blogContainer.classList.add('flex', 'flex-col', 'bg-white', 'w-grid', 'rounded');
+      popup.appendChild(blogContainer);
+
+      // Blog title
+      const span = document.createElement('span');
+      span.classList.add('flex', 'items-center', 'justify-between', 'pad-x')
+      const title = document.createElement('h1');
+      title.textContent = blog.blogTitle;
+      title.classList.add('text-lg', 'text-end', 'pad');
+
+      const likes = document.createElement('p');
+      likes.textContent = `Likes: ${blog.likes}`;
+      likes.classList.add('text-start');
+
+      span.appendChild(title)
+      span.appendChild(likes)
+
+
+
+      blogContainer.appendChild(span);
+
+      // Blog image and body container
+      const imageAndBodyContainer = document.createElement('div');
+      imageAndBodyContainer.classList.add('gap-8', 'rounded', 'w-full', 'pad', 'flex', 'items-center', 'flex-row');
+      blogContainer.appendChild(imageAndBodyContainer);
+
+      // Blog image
+      const image = document.createElement('img');
+      image.src = blog.blogImage;
+      image.alt = 'Blog Image';
+      image.classList.add('blog_image');
+      imageAndBodyContainer.appendChild(image);
+
+      // Blog body
+      const body = document.createElement('p');
+      body.textContent = blog.blogBody;
+      imageAndBodyContainer.appendChild(body);
+
+
+      // Comments
+      if (blog.comments.length > 0) {
+        const commentsContainer = document.createElement('div');
+        commentsContainer.classList.add('flex', 'items-start', 'gap-8', 'flex-col', 'pad');
+        const commentsTitle = document.createElement('h3');
+        commentsTitle.textContent = 'Comments:';
+        commentsContainer.appendChild(commentsTitle);
+
+        blog.comments.forEach(comment => {
+          const commentWrapper = document.createElement('div');
+          commentWrapper.classList.add('comment-wrapper', 'flex', 'items-center', 'gap-8', 'text-white');
+
+          const profileText = document.createElement('div');
+          profileText.classList.add('profile-text', 'text-center', 'flex', 'items-center', 'justify-center', 'rounded');
+          profileText.setAttribute('title', comment.name);
+          profileText.innerHTML = getInitials(comment.name);
+          commentWrapper.appendChild(profileText);
+
+          const commentContent = document.createElement('div');
+          commentContent.classList.add('comment-content', 'flex', 'flex-col');
+
+          const commenterName = document.createElement('span');
+          commenterName.classList.add('text-xs');
+          commenterName.textContent = comment.name;
+          commentContent.appendChild(commenterName);
+
+          const commentText = document.createElement('p');
+          commentText.textContent = comment.comment;
+          commentContent.appendChild(commentText);
+
+          const commentTimestamp = document.createElement('small');
+          commentTimestamp.classList.add('text-xs');
+          commentTimestamp.innerHTML = formatTimestamp(comment.createdAt);
+          commentContent.appendChild(commentTimestamp);
+
+          commentWrapper.appendChild(commentContent);
+
+          commentsContainer.appendChild(commentWrapper);
+        });
+
+        popup.appendChild(commentsContainer);
+      }
+
+
+
+      // Close button
+      const closeButton = document.createElement('button');
+      closeButton.textContent = 'Close';
+      closeButton.classList.add('close-button', 'text-center');
+      closeButton.addEventListener('click', () => {
+        document.body.removeChild(popup);
+      });
+      popup.appendChild(closeButton);
+
+      // Add the popup to the body
+      document.body.appendChild(popup);
+    })
+    .catch(error => {
+      showToast(error.message);
+      removeLoader(document.body);
+    });
+}
+
 
 // Function to show image preview popup
 function showImagePreview(imageUrl) {
@@ -275,16 +448,24 @@ const popupStyle = `
 .popup {
   position: fixed;
   top: 0;
+  right:0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 1);
+  
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+  overflow-y: scroll;
   z-index: 9999;
+}
+img:hover{
   cursor: zoom-out; /* Change cursor to zoom-out when hovering over the image */
-}`;
+
+}
+`;
+
 
 // Add the CSS styles to the document head
 const styleElement = document.createElement('style');
@@ -303,7 +484,7 @@ document.addEventListener('DOMContentLoaded', function () {
     contactForm.addEventListener('submit', function (event) {
       event.preventDefault();
 
-      const email = document.getElementById('email') ? document.getElementById('email').value : null; // Check if email input exists
+      const email = document.getElementById('email') ? document.getElementById('email').value : null;
       const subject = document.getElementById('subject') ? document.getElementById('subject').value : null; // Check if subject input exists
       const body = document.getElementById('body') ? document.getElementById('body').value : null; // Check if body input exists
 
@@ -339,10 +520,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  function validateEmail(email) {
-    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return re.test(String(email).toLowerCase());
-  }
+
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -352,8 +530,8 @@ document.addEventListener('DOMContentLoaded', function () {
     loginForm.addEventListener('submit', function (event) {
       event.preventDefault();
 
-      const email = document.getElementById('email') ? document.getElementById('email').value : null; 
-      const password = document.getElementById('password') ? document.getElementById('password').value : null; 
+      const email = document.getElementById('email') ? document.getElementById('email').value : null;
+      const password = document.getElementById('password') ? document.getElementById('password').value : null;
 
       if (!email || !password) {
         showToast('Incomplete login details.');
@@ -397,6 +575,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => {
           showToast(error.message);
+          console.log(error)
           document.getElementById('email-error').textContent = 'Invalid email or password';
         });
     });
@@ -419,8 +598,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const token = localStorage.getItem('token');
     if (!token) {
-      window.location.href = "./login.html"; 
-    
+      window.location.href = "./login.html";
+
     }
   }
 });
@@ -432,8 +611,87 @@ document.addEventListener('DOMContentLoaded', function () {
   openModalIcons.forEach(icon => {
     icon.addEventListener('click', function () {
       const modalId = this.dataset.modal;
-      const modal = document.getElementById(modalId); 
-      modal.classList.toggle('hidden'); 
+      const modal = document.getElementById(modalId);
+      modal.classList.toggle('hidden');
     });
   });
+});
+
+function sendEmail() {
+  const emailInput = document.getElementById('email');
+  const subjectInput = document.getElementById('subject');
+  const bodyInput = document.getElementById('body');
+
+  const email = emailInput.value;
+  const subject = subjectInput.value;
+  const body = bodyInput.value;
+
+  // Validate email
+  if (!validateEmail(email)) {
+    document.getElementById('email-error').textContent = 'Please enter a valid email address.';
+    return;
+  }
+
+  // Validate subject
+  if (subject.trim() === '') {
+    document.getElementById('subject-error').textContent = 'Subject cannot be empty.';
+    return;
+  }
+
+  // Validate body
+  if (body.length < 1) {
+    document.getElementById('body-error').textContent = 'Body cannot be empty.';
+    return;
+  }
+
+  // Clear error messages
+  document.getElementById('email-error').textContent = '';
+  document.getElementById('subject-error').textContent = '';
+  document.getElementById('body-error').textContent = '';
+
+  // Append loader before sending the request
+  appendLoader();
+
+  // Form payload
+  const formData = {
+    from:email,
+    subject,
+    text:body
+  };
+
+  // Send request to the server
+  fetch('https://my-brand-backend-vq8n.onrender.com/admin/mail/send', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      showToast(data.message); // Show success message
+      // Clear form fields
+      emailInput.value = '';
+      subjectInput.value = '';
+      bodyInput.value = '';
+    })
+    .catch(error => {
+      showToast(error.message); // Show error message
+    })
+    .finally(() => {
+      removeLoader(); // Remove loader after fetch request completes
+    });
+}
+
+
+
+// Add event listener to form submission
+document.getElementById('contactForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // Prevent default form submission behavior
+  sendEmail(); // Call sendEmail function to handle form submission
 });
