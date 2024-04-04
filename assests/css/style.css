@@ -96,7 +96,8 @@ nav.large {
 
 .text-xs {
     font-size: 16px;
-    font-weight: 200;
+    font-weight: 10;
+    letter-spacing: .2rem;
 }
 
 .underline-move {
@@ -404,14 +405,20 @@ i:hover {
     from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
   }
-  
+
+.opacity-0{
+    opacity: 0;
+}
+.opacity-0:hover{
+    cursor: pointer;
+}
 .comment-division {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(0, 0, 0, 0.8);
+    /* background-color: rgba(0, 0, 0, 0.8); */
     z-index: 9999;
     justify-content: center;
     align-items: center;
@@ -505,6 +512,14 @@ small.text-xs {
 .text-white {
     color: white;
 }
+.text-light-gray{
+    color: black;
+    border: 2px solid white; 
+    padding: 5px 30px;
+    
+    background: #aaa;
+    border-style: dotted;
+}
 
 .close:hover,
 .close:focus {
@@ -514,8 +529,8 @@ small.text-xs {
 }
 
 .profile-text {
-    width: 3rem;
-    height: 3rem;
+    width: 2.3rem;
+    height: 2rem;
     background: #000;
     
 }
@@ -550,6 +565,9 @@ small.text-xs {
 
 .bg-gray {
     background-color: #b4b4b4b4;
+}
+.bg-dark-gray {
+    background-color: gray;
 }
 
 .form-group button {

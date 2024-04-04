@@ -60,21 +60,7 @@
 
 
     <script>
-        const getInitials = (fullName) => {
-            const nameParts = fullName.split(" ");
-            const firstInitial = nameParts[0].charAt(0).toUpperCase();
-
-            if (nameParts.length === 1) {
-                return `<span class="text-white text-lg  font-bold ">${firstInitial}</span>`;
-            }
-
-            const secondInitial = nameParts[1].charAt(0).toUpperCase();
-
-            return `<div class="flex rounded ">
-                <span class="text-gray text-lg  font-bold">${firstInitial}</span>
-                <span class="text-white text-lg  font-bold">${secondInitial}</span>
-            </div>`;
-        };
+   
 
         function createCommentForBlog(blogId) {
             const nameInput = document.querySelector(`.blog-container[data-blog-id="${blogId}"] input[name="name"]`);
@@ -120,21 +106,12 @@
                 });
 
             // Reset input fields after submitting
+
             nameInput.value = '';
             commentInput.value = '';
         }
 
-        function formatTimestamp(timestamp) {
-            const date = new Date(timestamp);
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const day = date.getDate().toString().padStart(2, '0');
-            const hour = date.getHours() > 12 ? (date.getHours() - 12).toString().padStart(2, '0') : date.getHours().toString().padStart(2, '0');
-            const minute = date.getMinutes().toString().padStart(2, '0');
-            const period = date.getHours() >= 12 ? 'PM' : 'AM';
-
-            return `${year}-${month}-${day} ${hour}:${minute} ${period}`;
-        }
+     
 
         function loadAllBlogs() {
             const blogContainer = document.getElementById('blogContainer');
@@ -154,7 +131,7 @@
                 .then(blogs => {
                     const blogHTML = blogs?.data?.map(blog => {
                         const commentsHTML = blog.comments.map(comment => `
-                                <div class="flex items-center gap-8 justify-between w-full pad-x">
+                                <div class="flex items-center gap-8 justify-between w-full pad-x text-light-gray">
                                     <div class="profile-text text-center flex items-center justify-center rounded" title="${comment.name}">${getInitials(comment.name)}</div>
                                     <small class="text-xs">${comment.comment}</small>
                                     <small class="text-xs">${formatTimestamp(comment.createdAt)}</small>
@@ -171,12 +148,13 @@
                                     </div>
                                     <div class="flex justify-between pad">
                                         <span class="flex gap-8 relative ">
-                                            <div class=" envelope-container openModalBtn">
+                                            <div class=" envelope-container ">
         <i class="fa-regular fa-envelope text-sm  "></i>
         <span class="envelope-count ">${blog.comments.length}</span>
     </div>
-                                            <div class="modal-content flex flex-col justify-between gap-8 hidden comment-division pad w-full">
-                                                <div class="comment-content bg-white w-fit">
+                                            <span class="absolute openModalBtn opacity-0">View</span>
+                                            <div class="modal-content flex flex-col justify-between gap-8 hidden comment-division pad w-full bg-dark-gray">
+                                                <div class="comment-content  w-fit">
                                                     <div class="flex justify-between items-center">
                                                         <h4 class="pad-x">Comments</h4>
                                                         <span class="pad-x close">&times;</span>
@@ -191,7 +169,11 @@
                                                     <button type="submit" class="text-sm w-fit"><i class="fa-solid fa-plus" style="color: #c0c0c0;"></i></button>
                                                 </div>
                                             </div>
-                                            <button title="Post comment"><i class="fa-solid fa-thumbs-up text-sm"></i></button>
+                                            <div class=" envelope-container " >
+                                                <i class="fa-solid fa-thumbs-up text-sm"></i>
+        <span class="envelope-count ">${blog.likes}</span>
+    </div>
+                                           
                                         </span>
                                         <span>Uploaded on ${formatTimestamp(blog.createdAt)}</span>
                                     </div>
@@ -229,7 +211,42 @@
                     createCommentForBlog(blogId);
                 }
             });
-        }); </script>
+        });
+
+        // Function to handle liking a blog post
+        function likeBlogPost(blogId) {
+            fetch(`https://my-brand-backend-vq8n.onrender.com/blog/like/${blogId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${bearerToken}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    loadAllBlogs()
+                })
+                .catch(error => {
+                    console.error('Error liking blog post:', error);
+                });
+        }
+
+        // Event listener for thumbs-up button
+        blogContainer.addEventListener('click', function (event) {
+            const target = event.target;
+
+            if (target.classList.contains('fa-thumbs-up')) {
+                const blogId = target.closest('.blog-container').dataset.blogId;
+                likeBlogPost(blogId);
+            }
+        });
+
+    </script>
 </body>
 
 </html>
