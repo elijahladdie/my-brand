@@ -124,8 +124,6 @@ if (popups && btns && closeBtns) {
 document.addEventListener("change", () => {
   const fileInput = document.getElementById("file");
 });
-
-// add blog
 function addBlog() {
   let titleInput = document.getElementById("blogTitle");
   let fileInput = document.getElementById("file");
@@ -173,6 +171,12 @@ function addBlog() {
     .then(data => {
       showToast(data.message);
       refreshTable();
+
+      titleInput.value = "";
+      fileInput = "";
+      bodyInput.value = "";
+      blogIdInput.value = "";
+
       removeLoader(document.body);
     })
     .catch(error => {
@@ -241,6 +245,13 @@ function updateBlog(blogId) {
 }
 
 function refreshTable() {
+  
+  const isDashboardPage = document.getElementById("DASHBOARD") !== null;
+
+  // If it's not the dashboard page, return without refreshing the table
+  if (!isDashboardPage) {
+    return;
+  }
   appendLoader(document.body);
   fetch('https://my-brand-backend-vq8n.onrender.com/blog/all', {
     headers: {
@@ -289,7 +300,6 @@ function refreshTable() {
       removeLoader(document.body);
     });
 }
-// Function to view a specific blog
 function viewBlog(blogId) {
   appendLoader(document.body);
 
@@ -420,30 +430,30 @@ function viewBlog(blogId) {
 }
 
 
-// Function to show image preview popup
+
 function showImagePreview(imageUrl) {
-  // Create a popup division
+  
   let popup = document.createElement('div');
   popup.classList.add('popup');
 
-  // Create a close button
+  
   let closeButton = document.createElement('button');
   closeButton.textContent = 'Close';
   closeButton.classList.add('close-button');
   closeButton.addEventListener('click', () => {
-    document.body.removeChild(popup); // Remove the popup from the DOM when the close button is clicked
+    document.body.removeChild(popup); 
   });
 
-  // Set the background image of the popup division
+  
   popup.style.backgroundImage = `url(${imageUrl})`;
 
-  // Append the close button and popup division to the body
+  
   popup.appendChild(closeButton);
   document.body.appendChild(popup);
 }
 
 
-// CSS styles for the popup division
+
 const popupStyle = `
 .popup {
   position: fixed;
@@ -467,7 +477,7 @@ img:hover{
 `;
 
 
-// Add the CSS styles to the document head
+
 const styleElement = document.createElement('style');
 styleElement.innerHTML = popupStyle;
 document.head.appendChild(styleElement);
@@ -477,51 +487,6 @@ refreshTable();
 
 
 
-document.addEventListener('DOMContentLoaded', function () {
-  const contactForm = document.getElementById('contactForm');
-
-  if (contactForm) {
-    contactForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      const email = document.getElementById('email') ? document.getElementById('email').value : null;
-      const subject = document.getElementById('subject') ? document.getElementById('subject').value : null; // Check if subject input exists
-      const body = document.getElementById('body') ? document.getElementById('body').value : null; // Check if body input exists
-
-      if (!email || !subject || !body) {
-        showToast('Incomplete form details.');
-        return;
-      }
-
-      // Reset error messages
-      document.getElementById('email-error').textContent = '';
-      document.getElementById('subject-error').textContent = '';
-      document.getElementById('body-error').textContent = '';
-
-      // Email validation
-      if (!validateEmail(email)) {
-        document.getElementById('email-error').textContent = 'Please enter a valid email address.';
-        return;
-      }
-
-      // Subject validation
-      if (subject.trim() === '') {
-        document.getElementById('subject-error').textContent = 'Subject cannot be empty.';
-        return;
-      }
-
-      // Body validation
-      if (body.length < 40) {
-        document.getElementById('body-error').textContent = 'Body must be at least 40 characters.';
-        return;
-      }
-
-      showToast('Form submitted successfully!');
-    });
-  }
-
-
-});
 
 document.addEventListener('DOMContentLoaded', function () {
   const loginForm = document.getElementById('loginForm');
@@ -654,9 +619,9 @@ function sendEmail() {
 
   // Form payload
   const formData = {
-    from:email,
+    from: email,
     subject,
-    text:body
+    text: body
   };
 
   // Send request to the server
@@ -691,7 +656,51 @@ function sendEmail() {
 
 
 // Add event listener to form submission
-document.getElementById('contactForm').addEventListener('submit', function(event) {
+document.getElementById('contactForm').addEventListener('submit', function (event) {
   event.preventDefault(); // Prevent default form submission behavior
-  sendEmail(); // Call sendEmail function to handle form submission
+
+  const contactForm = document.getElementById('contactForm');
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email') ? document.getElementById('email').value : null;
+      const subject = document.getElementById('subject') ? document.getElementById('subject').value : null; // Check if subject input exists
+      const body = document.getElementById('body') ? document.getElementById('body').value : null; // Check if body input exists
+
+      if (!email || !subject || !body) {
+        showToast('Incomplete form details.');
+        return;
+      }
+
+      // Reset error messages
+      document.getElementById('email-error').textContent = '';
+      document.getElementById('subject-error').textContent = '';
+      document.getElementById('body-error').textContent = '';
+
+      // Email validation
+      if (!validateEmail(email)) {
+        document.getElementById('email-error').textContent = 'Please enter a valid email address.';
+        return;
+      }
+
+      // Subject validation
+      if (subject.trim() === '') {
+        document.getElementById('subject-error').textContent = 'Subject cannot be empty.';
+        return;
+      }
+
+      // Body validation
+      if (body.length < 30) {
+        document.getElementById('body-error').textContent = 'Body must be at least 30 characters.';
+        return;
+      }
+
+      sendEmail(); // Call sendEmail function to handle form submission
+      showToast('Form submitted successfully!');
+    });
+  }
+
+
 });
